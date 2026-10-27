@@ -1,0 +1,245 @@
+{
+  "info": {
+    "name": "CYPHER - AICTE Regulatory Officer Portal",
+    "_postman_id": "7f8b9e10-c112-4d1a-8e2b-apaarverify01",
+    "description": "Complete Postman collection for testing the CYPHER AICTE Regulatory Officer API Suite including Auth, Registration, Student Records, Ingestion, Validation, and Public Verification.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api/v1", "type": "string" },
+    { "key": "authToken", "value": "", "type": "string" },
+    { "key": "dietInstId", "value": "11111111-1111-1111-1111-111111111111", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication & Registration",
+      "item": [
+        {
+          "name": "Sign-Up - New Regulatory Staff Registration",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Rajeshwar Sen\",\n  \"staffEmail\": \"rajeshwar.sen@aicte-india.org\",\n  \"staffId\": \"AICTE-REG-099\",\n  \"department\": \"Bureau of Approval\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "Login - Existing Officer / College Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('authToken', jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"aicte_officer\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login - AICTE Regulatory Officer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"aicte_officer\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Student Record Management",
+      "item": [
+        {
+          "name": "Get All Students (Filtered by Institution)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students?institutionId={{dietInstId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["students"],
+              "query": [{ "key": "institutionId", "value": "{{dietInstId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Add Single Student (with 12-Digit APAAR)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentName\": \"Siddharth Malhotra\",\n  \"gender\": \"MALE\",\n  \"dateOfBirth\": \"2005-03-21\",\n  \"apaarId\": \"918273645019\",\n  \"fatherOrGuardianName\": \"Sunil Malhotra\",\n  \"institutionId\": \"{{dietInstId}}\",\n  \"courseName\": \"B.Tech Computer Science & Engineering\",\n  \"department\": \"Engineering & Technology\",\n  \"academicYear\": \"2026-2027\",\n  \"rollNumber\": \"26-CSE-188\",\n  \"admissionCategory\": \"GENERAL\",\n  \"isNri\": false,\n  \"isSupernumerary\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/students", "host": ["{{baseUrl}}"], "path": ["students"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Intake & Quota Monitoring",
+      "item": [
+        {
+          "name": "Get Intake Utilization vs Sanctioned Seats",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/intake?institutionId={{dietInstId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["intake"],
+              "query": [{ "key": "institutionId", "value": "{{dietInstId}}" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Automated Validation Engine",
+      "item": [
+        {
+          "name": "Execute Validation Engine",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/validation/run", "host": ["{{baseUrl}}"], "path": ["validation", "run"] }
+          }
+        },
+        {
+          "name": "Get Anomaly Findings",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/validation/results", "host": ["{{baseUrl}}"], "path": ["validation", "results"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Public Verification (Zero Auth Required)",
+      "item": [
+        {
+          "name": "Verify Valid Student Credential",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/verify/tok_sec_982345012344_aicte_verified_sig",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify", "tok_sec_982345012344_aicte_verified_sig"]
+            }
+          }
+        },
+        {
+          "name": "Verify Flagged Dual Enrolment Record",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/verify/tok_sec_773412095621_dual_enrolled_flag",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify", "tok_sec_773412095621_dual_enrolled_flag"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Audit Trail & Logs",
+      "item": [
+        {
+          "name": "Get Immutable Security Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/audit-logs", "host": ["{{baseUrl}}"], "path": ["audit-logs"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Statutory Compliance Reports",
+      "item": [
+        {
+          "name": "Download Student Enrolment CSV",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reports/enrolment/csv", "host": ["{{baseUrl}}"], "path": ["reports", "enrolment", "csv"] }
+          }
+        },
+        {
+          "name": "Download Student Enrolment PDF",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reports/enrolment/pdf", "host": ["{{baseUrl}}"], "path": ["reports", "enrolment", "pdf"] }
+          }
+        },
+        {
+          "name": "Download Intake Compliance CSV",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reports/intake/csv", "host": ["{{baseUrl}}"], "path": ["reports", "intake", "csv"] }
+          }
+        },
+        {
+          "name": "Download Intake Compliance PDF",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reports/intake/pdf", "host": ["{{baseUrl}}"], "path": ["reports", "intake", "pdf"] }
+          }
+        },
+        {
+          "name": "Download Anomaly & Duplicate Dossier CSV",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reports/anomalies/csv", "host": ["{{baseUrl}}"], "path": ["reports", "anomalies", "csv"] }
+          }
+        }
+      ]
+    }
+  ]
+}

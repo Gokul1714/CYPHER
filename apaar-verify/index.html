@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYPHER | AICTE Student Data Management & Verification</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- TOP GOVT BAR -->
+  <div class="bg-slate-900 text-slate-300 text-xs px-4 py-1.5 flex justify-between items-center border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <span class="font-medium text-amber-400">AICTE Regulatory Officer Portal</span>
+      <span class="text-slate-500">|</span>
+      <span>Ministry of Education &amp; AICTE, Government of India</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300">Mock APAAR Gateway: <strong class="text-emerald-400 font-semibold">Active</strong></span>
+      </span>
+      <span class="text-slate-500">|</span>
+      <span id="current-clock" class="text-slate-400">2026-10-27 14:30 IST</span>
+    </div>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="bg-[#0f2b5c] text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <!-- Logo & Branding -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('landing')">
+          <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center p-1.5 shadow">
+            <svg class="w-full h-full text-[#0f2b5c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-black text-lg tracking-wider text-white">CYPHER</span>
+              <span class="bg-amber-500/20 text-amber-300 text-[11px] px-2 py-0.5 rounded border border-amber-400/40 font-mono">OFFICIAL</span>
+            </div>
+            <p class="text-[11px] text-slate-300 tracking-tight">AICTE Central Student Record &amp; Intake Compliance Engine</p>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-2">
+          <button onclick="navigateTo('landing')" id="nav-landing" class="px-3 py-1.5 text-sm font-medium rounded-md hover:bg-white/10 text-slate-200">Home</button>
+          <button onclick="navigateTo('public-verify')" id="nav-public-verify" class="px-3 py-1.5 text-sm font-medium rounded-md hover:bg-white/10 text-slate-200 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Public Verify
+          </button>
+          <div class="h-5 w-px bg-white/20 mx-1"></div>
+          <button onclick="navigateTo('login')" class="px-3.5 py-1.5 text-sm font-semibold rounded-md bg-white/10 hover:bg-white/20 text-white border border-white/20 transition">
+            Sign In
+          </button>
+          <button onclick="navigateTo('signup')" class="px-3.5 py-1.5 text-sm font-semibold rounded-md bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-sm transition">
+            Staff Sign Up
+          </button>
+        </nav>
+
+        <!-- Current User Profile / Logged In Info -->
+        <div id="auth-status-bar" class="hidden flex items-center gap-3">
+          <button onclick="navigateTo('portal')" class="px-3 py-1.5 text-xs font-semibold rounded bg-white/10 hover:bg-white/20 text-white mr-1">
+            My Portal
+          </button>
+          <div class="text-right">
+            <div id="logged-user-name" class="text-xs font-semibold text-white">Dr. Ramesh Kumar</div>
+            <div id="logged-user-role" class="text-[10px] text-amber-300">AICTE Directorate</div>
+          </div>
+          <button onclick="logout()" class="px-2.5 py-1 text-xs bg-red-600/80 hover:bg-red-600 text-white rounded font-medium transition">
+            Exit
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-1 flex flex-col">
+
+    <!-- ============================================================== -->
+    <!-- VIEW 1: LANDING PAGE -->
+    <!-- ============================================================== -->
+    <section id="view-landing" class="block">
+      <!-- Hero Banner -->
+      <div class="bg-gradient-to-b from-[#0f2b5c] via-[#1e3a8a] to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-700">
+        <div class="max-w-5xl mx-auto text-center space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            AICTE Approved Institutions Platform • Regulatory Compliance &amp; Intake Directorate
+          </div>
+          <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+            Centralized APAAR ID Student Management &amp; Intake Verification
+          </h1>
+          <p class="text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            Eliminate ghost admissions, prevent cross-institution duplicate enrolments, monitor approved intake limits, and issue tamper-proof verifiable student credentials under the <em>One Nation, One Student ID</em> initiative.
+          </p>
+          <div class="flex flex-wrap justify-center gap-4 pt-4">
+            <button onclick="openLoginForRole('INSTITUTION_ADMIN')" class="px-6 py-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold shadow-lg transition flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+              Institution Admin Portal
+            </button>
+            <button onclick="openLoginForRole('AICTE_ADMIN')" class="px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold transition flex items-center gap-2">
+              <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              AICTE Regulatory Officer Portal
+            </button>
+            <button onclick="navigateTo('public-verify')" class="px-6 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+              Verify Record by Token / QR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Platform Live Highlights -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white rounded-xl p-5 shadow-lg border border-slate-200">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">AICTE Participating Institutes</div>
+            <div class="text-2xl font-black text-slate-900 mt-1">3 <span class="text-xs font-normal text-emerald-600">(Live Demo Set)</span></div>
+            <p class="text-xs text-slate-500 mt-2">Delhi, Maharashtra &amp; Karnataka</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-lg border border-slate-200">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Enrolled Records</div>
+            <div class="text-2xl font-black text-blue-700 mt-1">6 Active Students</div>
+            <p class="text-xs text-slate-500 mt-2">Multi-year academic tracking</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-lg border border-slate-200">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Cross-College Duplicates</div>
+            <div class="text-2xl font-black text-red-600 mt-1">1 Anomaly Flagged</div>
+            <p class="text-xs text-slate-500 mt-2">Dual active admission flagged</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-lg border border-slate-200">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Intake Quota Compliance</div>
+            <div class="text-2xl font-black text-emerald-600 mt-1">98.2% Normative</div>
+            <p class="text-xs text-slate-500 mt-2">Zero unapproved seat breaches</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Matrix Cards -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center mb-12">
+          <h2 class="text-2xl font-bold text-slate-900">Key Pillars of the CYPHER Platform</h2>
+          <p class="text-sm text-slate-600 mt-2">Statutory Student Record Verification &amp; Intake Monitoring Framework</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center mb-4">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Automated Validation Engine</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Syntactic 12-digit format check, intra-institution duplicate detection, and inter-institution active admission cross-matching. Distinctly separates format syntax checks from official authorized gateway verification.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="w-12 h-12 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center mb-4">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Intake &amp; Quota Monitoring</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Monitors approved sanctioned intake per institution, department, and academic year. Segregates General, NRI/OCI, and Supernumerary quotas (TFW, PMSSS) with real-time excess admission warnings.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">Privacy &amp; Secure Verification</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Strictly adheres to data minimization: no Aadhaar numbers collected. Uses unpredictable, cryptographically random signed verification tokens in QR codes to prevent PII exposure, backed by complete audit logging.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 2: DEDICATED LOGIN PAGE -->
+    <!-- ============================================================== -->
+    <section id="view-login" class="hidden flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-100">
+      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 border border-slate-200 space-y-6">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 text-[11px] font-semibold border border-blue-200 mb-2">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            CYPHER • AICTE Regulatory Officer Portal
+          </div>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight">Sign In to CYPHER</h2>
+          <p class="text-xs text-slate-500 mt-1">Access institutional rosters, verification queues, and intake monitors.</p>
+        </div>
+
+        <!-- Inline Feedback Messages -->
+        <div id="login-error-msg" class="hidden p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-800 font-medium"></div>
+        <div id="login-success-msg" class="hidden p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium"></div>
+
+        <!-- Fast Role Switcher Buttons for Existing Officers -->
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+          <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Fast Select Existing Officer Account:</div>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="presetLogin('aicte_officer')" class="p-2 rounded-lg border text-left hover:bg-amber-50 transition border-amber-200 bg-white">
+              <div class="text-xs font-bold text-amber-900">Dr. Ramesh Kumar</div>
+              <div class="text-[10px] text-amber-700">AICTE Regulatory Director</div>
+            </button>
+            <button type="button" onclick="presetLogin('diet_admin')" class="p-2 rounded-lg border text-left hover:bg-blue-50 transition border-blue-200 bg-white">
+              <div class="text-xs font-bold text-blue-900">Prof. Sunita Sharma</div>
+              <div class="text-[10px] text-blue-700">DIET College Registrar</div>
+            </button>
+          </div>
+        </div>
+
+        <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Email / Username</label>
+            <input type="text" id="login-input-username" required placeholder="name@aicte-india.org or username" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-bold text-slate-700">Password</label>
+              <a href="javascript:void(0)" onclick="handleForgotPassword()" class="text-xs text-blue-700 hover:text-blue-900 font-semibold hover:underline">Forgot Password?</a>
+            </div>
+            <input type="password" id="login-input-password" required placeholder="Enter password" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+          <div>
+            <button type="submit" class="w-full py-2.5 px-4 bg-[#0f2b5c] hover:bg-[#1a407e] text-white font-bold rounded-lg text-sm shadow transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+              Login to CYPHER
+            </button>
+          </div>
+        </form>
+
+        <div class="text-center pt-2 border-t border-slate-100">
+          <p class="text-xs text-slate-600">
+            New User? 
+            <a href="javascript:void(0)" onclick="navigateTo('signup')" class="font-bold text-blue-700 hover:text-blue-900 hover:underline">Sign Up here</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 3: DEDICATED SIGN-UP PAGE (EXACTLY 5 FIELDS) -->
+    <!-- ============================================================== -->
+    <section id="view-signup" class="hidden flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-100">
+      <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 border border-slate-200 space-y-6">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 text-[11px] font-semibold border border-amber-200 mb-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            CYPHER Staff Registration Desk
+          </div>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight">Create CYPHER Account</h2>
+          <p class="text-xs text-slate-500 mt-1">Register for AICTE regulatory oversight privileges. Mandatory staff credentials required.</p>
+        </div>
+
+        <!-- Inline Feedback Messages -->
+        <div id="signup-error-msg" class="hidden p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-800 font-medium"></div>
+        <div id="signup-success-msg" class="hidden p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium"></div>
+
+        <form onsubmit="handleSignUpSubmit(event)" class="space-y-4">
+          <!-- FIELD 1: Full Name -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+            <input type="text" id="signup-fullname" required placeholder="e.g. Dr. Rajeshwar Sen" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+
+          <!-- FIELD 2: Staff Email ID -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Staff Email ID *</label>
+            <input type="email" id="signup-email" required placeholder="e.g. rajeshwar.sen@aicte-india.org" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+
+          <!-- FIELD 3: Staff ID -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Staff ID *</label>
+            <input type="text" id="signup-staffid" required placeholder="e.g. AICTE-REG-045" class="w-full px-3.5 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+
+          <!-- FIELD 4: Department -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Department *</label>
+            <input type="text" id="signup-department" required placeholder="e.g. Bureau of Approval" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+
+          <!-- FIELD 5: Password -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password *</label>
+            <input type="password" id="signup-password" required placeholder="Minimum 6 characters" class="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+
+          <div>
+            <button type="submit" id="btn-signup-submit" class="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-sm shadow transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+              Register / Sign Up
+            </button>
+          </div>
+        </form>
+
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-500 leading-relaxed">
+          <strong>Staff Verification Policy:</strong> Newly registered accounts must undergo staff verification and administrator approval before regulatory officer privileges are granted.
+        </div>
+
+        <div class="text-center pt-2 border-t border-slate-100">
+          <p class="text-xs text-slate-600">
+            Already have an officer account? 
+            <a href="javascript:void(0)" onclick="navigateTo('login')" class="font-bold text-blue-700 hover:text-blue-900 hover:underline">Log In here</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 3: APPLICATION PORTAL (NAVBAR TABS + SIDEBAR LAYOUT) -->
+    <!-- ============================================================== -->
+    <div id="view-portal" class="hidden flex-1 flex flex-col md:flex-row">
+      <!-- SIDEBAR NAVIGATION -->
+      <aside class="w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex flex-col justify-between border-r border-slate-800">
+        <div class="p-4 space-y-6">
+          <!-- Role context card -->
+          <div class="p-3 rounded-lg bg-slate-800/80 border border-slate-700">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400" id="portal-sidebar-context">CYPHER Portal</div>
+            <div class="text-sm font-bold text-white truncate" id="portal-sidebar-inst-name">Delhi Inst. of Engg & Tech</div>
+            <div class="text-xs text-amber-400 font-mono mt-0.5" id="portal-sidebar-inst-code">1-AICTE-DELHI-001</div>
+          </div>
+
+          <!-- Nav Items -->
+          <nav class="space-y-1">
+            <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg bg-blue-600 text-white">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+              Dashboard
+            </button>
+            <button onclick="switchTab('students')" id="tab-btn-students" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg hover:bg-slate-800 text-slate-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              Student Records
+            </button>
+            <button onclick="switchTab('bulk-upload')" id="tab-btn-bulk-upload" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg hover:bg-slate-800 text-slate-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+              CSV Bulk Ingestion
+            </button>
+            <button onclick="switchTab('validation')" id="tab-btn-validation" class="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg hover:bg-slate-800 text-slate-300">
+              <div class="flex items-center gap-3">
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                Validation Engine
+              </div>
+              <span id="tab-badge-alerts" class="bg-amber-500/20 text-amber-300 text-[10px] px-1.5 py-0.5 rounded-full font-mono">3</span>
+            </button>
+            <button onclick="switchTab('intake')" id="tab-btn-intake" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg hover:bg-slate-800 text-slate-300">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              Intake Quota Monitor
+            </button>
+            <button onclick="switchTab('reports')" id="tab-btn-reports" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg hover:bg-slate-800 text-slate-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Compliance Reports
+            </button>
+            <button onclick="switchTab('audit-logs')" id="tab-btn-audit-logs" class="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg hover:bg-slate-800 text-slate-300">
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Security Audit Logs
+            </button>
+          </nav>
+        </div>
+
+        <div class="p-4 border-t border-slate-800 text-[11px] text-slate-400 space-y-2">
+          <div class="flex items-center justify-between">
+            <span>Environment:</span>
+            <span class="text-emerald-400 font-mono">AICTE Official Desk</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Security Model:</span>
+            <span class="text-blue-300">RBAC + Multi-Tenant</span>
+          </div>
+          <button onclick="logout()" class="w-full mt-2 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-center font-medium transition">
+            Sign Out
+          </button>
+        </div>
+      </aside>
+
+      <!-- PORTAL BODY CONTENT -->
+      <section class="flex-1 bg-slate-100 p-6 overflow-y-auto custom-scrollbar">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: DASHBOARD -->
+        <!-- ========================================== -->
+        <div id="tab-content-dashboard" class="space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900" id="dash-heading">CYPHER Institution Admission Dashboard</h2>
+              <p class="text-xs text-slate-500">Academic Year: <strong class="text-slate-700">2026-2027</strong> • Real-time database telemetry</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openAddStudentModal()" class="px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                Add Student
+              </button>
+              <button onclick="switchTab('bulk-upload')" class="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-lg text-xs font-semibold shadow-sm flex items-center gap-1.5 transition">
+                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                Upload CSV
+              </button>
+              <button onclick="runValidationEngine()" class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                Run Validation
+              </button>
+            </div>
+          </div>
+
+          <!-- AICTE REGULATOR VIEW BANNER (Only visible in AICTE Mode) -->
+          <div id="aicte-banner-view" class="hidden p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300/50">
+            <div class="flex items-start gap-3">
+              <div class="p-2 bg-amber-100 rounded-lg text-amber-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-amber-900">National AICTE Supervisory Mode Active</h4>
+                <p class="text-xs text-amber-800 mt-0.5">You are inspecting all participating universities across India. Cross-institutional duplicate admission flags and intake breaches require your regulatory adjudication.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI Metric Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+              <div class="flex justify-between items-start">
+                <span class="text-xs font-semibold text-slate-500 uppercase">Total Enrolments</span>
+                <span class="p-1.5 rounded-md bg-blue-50 text-blue-600">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </span>
+              </div>
+              <div class="text-2xl font-black text-slate-900 mt-2" id="kpi-total-enrolled">5</div>
+              <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                <span class="text-emerald-600 font-medium">100% Active</span> • Academic Session 2026-27
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+              <div class="flex justify-between items-start">
+                <span class="text-xs font-semibold text-slate-500 uppercase">Sanctioned Seats</span>
+                <span class="p-1.5 rounded-md bg-emerald-50 text-emerald-600">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+              </div>
+              <div class="text-2xl font-black text-slate-900 mt-2" id="kpi-approved-intake">180</div>
+              <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                <span>AICTE Approved Quota</span>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+              <div class="flex justify-between items-start">
+                <span class="text-xs font-semibold text-slate-500 uppercase">APAAR Validated</span>
+                <span class="p-1.5 rounded-md bg-amber-50 text-amber-600">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </span>
+              </div>
+              <div class="text-2xl font-black text-slate-900 mt-2" id="kpi-apaar-valid">3 <span class="text-xs font-normal text-slate-500">/ 5</span></div>
+              <div class="text-[11px] text-amber-600 mt-1 font-medium flex items-center gap-1">
+                <span>2 Need Format Attention</span>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+              <div class="flex justify-between items-start">
+                <span class="text-xs font-semibold text-slate-500 uppercase">Validation Flags</span>
+                <span class="p-1.5 rounded-md bg-red-50 text-red-600">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </span>
+              </div>
+              <div class="text-2xl font-black text-red-600 mt-2" id="kpi-anomalies">3 Flags</div>
+              <div class="text-[11px] text-red-700 mt-1 font-medium flex items-center gap-1">
+                <span>1 Cross-inst match, 2 Format</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Intake Quota Utilization Progress Table -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+            <div class="flex justify-between items-center mb-4">
+              <div>
+                <h3 class="text-base font-bold text-slate-900">Approved Intake vs Actual Enrolment (2026-2027)</h3>
+                <p class="text-xs text-slate-500">Real-time comparison preventing excess admissions over sanctioned limits</p>
+              </div>
+              <button onclick="switchTab('intake')" class="text-xs text-blue-700 hover:text-blue-900 font-semibold">View Detailed Quotas &rarr;</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                  <tr>
+                    <th class="py-2.5 px-3">Course / Department</th>
+                    <th class="py-2.5 px-3">Sanctioned Seats</th>
+                    <th class="py-2.5 px-3">Actual Enrolled</th>
+                    <th class="py-2.5 px-3">Supernumerary (TFW/NRI)</th>
+                    <th class="py-2.5 px-3">Seat Utilization</th>
+                    <th class="py-2.5 px-3">Compliance Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100" id="dash-intake-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recent Anomalies & Validation Alerts -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+            <div class="flex justify-between items-center mb-4">
+              <div>
+                <h3 class="text-base font-bold text-slate-900">Automated Validation Alerts</h3>
+                <p class="text-xs text-slate-500">Records requiring review by institutional or AICTE administrators</p>
+              </div>
+              <button onclick="switchTab('validation')" class="text-xs text-blue-700 hover:text-blue-900 font-semibold">Manage All Alerts &rarr;</button>
+            </div>
+            <div class="space-y-3" id="dash-alerts-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: STUDENT MANAGEMENT -->
+        <!-- ========================================== -->
+        <div id="tab-content-students" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900">Student Record Management</h2>
+              <p class="text-xs text-slate-500">View, search, update and generate verification tokens for students</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openAddStudentModal()" class="px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                Add Single Student
+              </button>
+            </div>
+          </div>
+
+          <!-- Filters Bar -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Search Records</label>
+              <input type="text" id="filter-search" oninput="renderStudentsTable()" placeholder="Search Name, APAAR, Roll No..." class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Course Filter</label>
+              <select id="filter-course" onchange="renderStudentsTable()" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600 focus:outline-none">
+                <option value="ALL">All Courses</option>
+                <option value="B.Tech Computer Science & Engineering">B.Tech Computer Science &amp; Engg</option>
+                <option value="B.Tech Electronics & Communication">B.Tech Electronics &amp; Comm</option>
+                <option value="B.Tech Mechanical Engineering">B.Tech Mechanical Engg</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">APAAR Format Status</label>
+              <select id="filter-apaar-status" onchange="renderStudentsTable()" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600 focus:outline-none">
+                <option value="ALL">All Statuses</option>
+                <option value="VALID">Valid 12-Digit</option>
+                <option value="INVALID">Invalid / Missing</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Category</label>
+              <select id="filter-category" onchange="renderStudentsTable()" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600 focus:outline-none">
+                <option value="ALL">All Categories</option>
+                <option value="GENERAL">General</option>
+                <option value="OBC_NCL">OBC-NCL</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+                <option value="EWS">EWS</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Students Table -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-4">Student Name &amp; ID</th>
+                    <th class="py-3 px-4">APAAR ID Reference</th>
+                    <th class="py-3 px-4">Institution &amp; Course</th>
+                    <th class="py-3 px-4">Category &amp; Quota</th>
+                    <th class="py-3 px-4">Enrolment</th>
+                    <th class="py-3 px-4">Verification</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100" id="students-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: BULK CSV INGESTION -->
+        <!-- ========================================== -->
+        <div id="tab-content-bulk-upload" class="hidden space-y-6">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">Bulk Student CSV Ingestion</h2>
+            <p class="text-xs text-slate-500">Upload multiple student records with immediate pre-ingestion validation</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Upload Box -->
+            <div class="lg:col-span-1 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+              <h3 class="text-sm font-bold text-slate-900">1. Select CSV File</h3>
+              
+              <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-500 transition cursor-pointer bg-slate-50/50" onclick="document.getElementById('csv-file-input').click()">
+                <svg class="w-10 h-10 mx-auto text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                <div class="text-xs font-semibold text-slate-700">Click to upload or drag &amp; drop</div>
+                <div class="text-[11px] text-slate-500 mt-1">Standard AICTE Student Schema (.csv)</div>
+                <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="handleCsvFileSelected(event)">
+              </div>
+
+              <div class="p-3 bg-blue-50 rounded-lg border border-blue-200 text-xs text-blue-900 space-y-2">
+                <div class="font-semibold flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Need a test dataset?
+                </div>
+                <p class="text-[11px] text-blue-800">Load our prepared AICTE test dataset containing valid records, missing APAARs, format errors, and duplicate scenarios:</p>
+                <button type="button" onclick="loadSampleCsvDataset()" class="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium text-xs shadow-sm transition">
+                  Load Synthetic AICTE Test CSV
+                </button>
+              </div>
+
+              <div class="text-[11px] text-slate-500 leading-relaxed">
+                <strong>Mandatory Fields:</strong> student_name, gender, date_of_birth, course_name, academic_year, admission_category.<br>
+                <strong>Privacy Policy:</strong> Aadhaar numbers are rejected at ingestion time.
+              </div>
+            </div>
+
+            <!-- Preview & Ingestion Analysis -->
+            <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900">2. Pre-Ingestion Analysis</h3>
+                  <p class="text-xs text-slate-500" id="csv-preview-subtitle">No CSV loaded yet</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="btn-ingest-csv" disabled onclick="confirmAndIngestCsv()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white rounded-lg text-xs font-semibold shadow transition">
+                    Confirm &amp; Ingest Records
+                  </button>
+                </div>
+              </div>
+
+              <div id="csv-preview-container" class="overflow-x-auto max-h-96 custom-scrollbar border border-slate-200 rounded-lg">
+                <div class="p-8 text-center text-slate-400 text-xs">
+                  Upload a CSV file or click "Load Synthetic AICTE Test CSV" to preview rows and instant format validation.
+                </div>
+              </div>
+
+              <div id="csv-validation-summary" class="hidden p-3 rounded-lg border text-xs">
+                <!-- Summary of pre-ingestion checks -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: AUTOMATED VALIDATION RESULTS -->
+        <!-- ========================================== -->
+        <div id="tab-content-validation" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900">Automated Validation &amp; Anomaly Engine</h2>
+              <p class="text-xs text-slate-500">Cross-checks records against AICTE regulatory rules, intake capacity, and APAAR format</p>
+            </div>
+            <button onclick="runValidationEngine()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              Re-run Complete Validation Engine
+            </button>
+          </div>
+
+          <!-- Explanatory note on authorized source distinction -->
+          <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div>
+              <span class="font-bold">Algorithmic Distinction Mandate:</span> Format validation checks syntax (12 numerical digits + Verhoeff check digits). However, under AICTE protocol, an APAAR ID is marked as <em>Officially Verified</em> only when validated against an authorized government source (DigiLocker / APAAR Mock Gateway).
+            </div>
+          </div>
+
+          <!-- Validation Rules Breakdown Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <div class="text-xs font-bold text-slate-700">1. APAAR Format &amp; Checksum</div>
+              <p class="text-[11px] text-slate-500 mt-1">Identifies missing APAAR references and flags numbers deviating from 12-digit standard.</p>
+              <div class="mt-3 text-xs font-semibold text-amber-600" id="rule-stat-format">2 Inconsistencies Detected</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <div class="text-xs font-bold text-slate-700">2. Cross-Institution Enrolment</div>
+              <p class="text-[11px] text-slate-500 mt-1">Scans active records nationwide to detect dual concurrent enrolments without presumption of fraud.</p>
+              <div class="mt-3 text-xs font-semibold text-red-600" id="rule-stat-cross">1 Active Match for Review</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <div class="text-xs font-bold text-slate-700">3. Approved Intake Capacity</div>
+              <p class="text-[11px] text-slate-500 mt-1">Cross-compares active student counts against AICTE sanctioned seats by course and quota.</p>
+              <div class="mt-3 text-xs font-semibold text-emerald-600" id="rule-stat-intake">100% Within Sanctioned Limits</div>
+            </div>
+          </div>
+
+          <!-- Validation Findings List -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-slate-900">Active Anomaly Flags &amp; Review Items</h3>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-500">Filter:</span>
+                <select id="filter-anomaly-type" onchange="renderValidationResults()" class="text-xs border border-slate-300 rounded px-2 py-1">
+                  <option value="ALL">All Rule Categories</option>
+                  <option value="INTER_INSTITUTION_DUPLICATE">Inter-Institution Duplicate</option>
+                  <option value="INVALID_APAAR_FORMAT">Invalid APAAR Format</option>
+                  <option value="MISSING_APAAR">Missing APAAR ID</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="divide-y divide-slate-100" id="validation-items-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: INTAKE QUOTA MONITOR -->
+        <!-- ========================================== -->
+        <div id="tab-content-intake" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900">Approved Intake &amp; Sanction Quota Monitoring</h2>
+              <p class="text-xs text-slate-500">Separately tracks approved general intake, NRI/OCI quotas, and Supernumerary seats</p>
+            </div>
+            <div class="text-xs text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+              AICTE Academic Year: <strong class="text-blue-900">2026-2027</strong>
+            </div>
+          </div>
+
+          <!-- Cards per course -->
+          <div class="space-y-4" id="intake-cards-container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 6: REPORTS & AUDIT EXPORTS -->
+        <!-- ========================================== -->
+        <div id="tab-content-reports" class="hidden space-y-6">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">AICTE Regulatory Compliance Reports</h2>
+            <p class="text-xs text-slate-500">Export downloadable CSV and printable verification summaries for inspection</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900">Student Enrolment Master Roster</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">Complete breakdown of all students, courses, APAAR ID status, and admission categories.</p>
+              <div class="flex gap-2">
+                <button onclick="downloadStudentRosterCsv()" class="flex-1 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                  Download CSV
+                </button>
+                <button onclick="openPrintPdfModal('ROSTER')" class="flex-1 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                  Print PDF
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900">Intake vs Actual Admission Audit</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">AICTE statutory compliance report contrasting sanctioned quotas against admitted counts.</p>
+              <div class="flex gap-2">
+                <button onclick="downloadIntakeReportCsv()" class="flex-1 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                  Download CSV
+                </button>
+                <button onclick="openPrintPdfModal('INTAKE')" class="flex-1 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                  Print PDF
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div class="w-10 h-10 rounded-lg bg-red-100 text-red-800 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900">Anomaly &amp; Duplicate Dossier</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">Detailed report of cross-institution duplicate enrolments and invalid APAAR formats.</p>
+              <button onclick="downloadAnomalyReportCsv()" class="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                Download Anomaly CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 7: SECURITY AUDIT LOGS -->
+        <!-- ========================================== -->
+        <div id="tab-content-audit-logs" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900">Security &amp; Regulatory Audit Trail</h2>
+              <p class="text-xs text-slate-500">Immutable ledger tracking logins, bulk ingestions, validations, and verification queries</p>
+            </div>
+            <div class="text-xs text-slate-500">
+              Retained per AICTE statutory guidelines
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-4">Timestamp</th>
+                    <th class="py-3 px-4">Operator / User</th>
+                    <th class="py-3 px-4">Action</th>
+                    <th class="py-3 px-4">Entity</th>
+                    <th class="py-3 px-4">IP &amp; Device</th>
+                    <th class="py-3 px-4">Details</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100" id="audit-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 4: PUBLIC RECORD VERIFICATION (SECURE QR / TOKEN LOOKUP) -->
+    <!-- ============================================================== -->
+    <section id="view-public-verify" class="hidden flex-1 bg-slate-100 p-6">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <div class="text-center space-y-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-semibold">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Authorized AICTE Verification Gateway
+          </div>
+          <h2 class="text-3xl font-extrabold text-slate-900">CYPHER Public Record Verification</h2>
+          <p class="text-sm text-slate-600 max-w-xl mx-auto">
+            Scan an official CYPHER QR code or enter the signed verification reference token. Unpredictable cryptographically-signed tokens prevent unauthorized student PII harvesting.
+          </p>
+        </div>
+
+        <!-- Verification Input Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+          <form onsubmit="handleVerificationQuery(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Signed Verification Reference Token</label>
+              <div class="flex gap-2">
+                <input type="text" id="verify-input-token" required placeholder="e.g. tok_sec_982345012344_aicte_verified_sig" value="tok_sec_982345012344_aicte_verified_sig" class="flex-1 px-4 py-2.5 text-sm font-mono border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-600 focus:outline-none">
+                <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow transition flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  Verify Record
+                </button>
+              </div>
+            </div>
+            <!-- Quick preset tokens -->
+            <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              <span class="font-medium">Try Preset Token:</span>
+              <button type="button" onclick="setVerifyToken('tok_sec_982345012344_aicte_verified_sig')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-blue-700 font-mono">Aarav Patel (Valid)</button>
+              <button type="button" onclick="setVerifyToken('tok_sec_773412095621_dual_enrolled_flag')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-amber-700 font-mono">Karan Sharma (Flagged)</button>
+              <button type="button" onclick="setVerifyToken('tok_invalid_sample_key')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-red-700 font-mono">Invalid Token</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Verification Result Presentation Card -->
+        <div id="verify-result-card" class="hidden bg-white rounded-2xl shadow-md border overflow-hidden transition-all">
+          <!-- Banner -->
+          <div id="verify-result-banner" class="p-4 flex items-center gap-3">
+            <div id="verify-result-icon" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white"></div>
+            <div>
+              <div id="verify-result-title" class="text-base font-bold"></div>
+              <div id="verify-result-desc" class="text-xs"></div>
+            </div>
+          </div>
+
+          <!-- Authorized Detail Body -->
+          <div id="verify-result-details" class="p-6 space-y-4 divide-y divide-slate-100">
+            <div class="grid grid-cols-2 gap-4 text-xs">
+              <div>
+                <span class="text-slate-400 block uppercase font-medium">Student Legal Name</span>
+                <span id="res-student-name" class="font-bold text-slate-900 text-sm">--</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block uppercase font-medium">APAAR ID (Masked)</span>
+                <span id="res-apaar-id" class="font-bold font-mono text-slate-900 text-sm">--</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block uppercase font-medium">Approved Institution</span>
+                <span id="res-institution" class="font-semibold text-slate-800">--</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block uppercase font-medium">Course &amp; Academic Year</span>
+                <span id="res-course" class="font-semibold text-slate-800">--</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block uppercase font-medium">Enrolment Status</span>
+                <span id="res-enrolment-status" class="font-semibold">--</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block uppercase font-medium">Official Verification Status</span>
+                <span id="res-verification-status" class="font-semibold">--</span>
+              </div>
+            </div>
+
+            <div class="pt-3 text-[11px] text-slate-400 flex justify-between items-center">
+              <span>Timestamp of AICTE Ledger Lookup: <strong id="res-query-time" class="text-slate-600 font-mono">--</strong></span>
+              <span class="text-slate-500 font-semibold">Audit Reference Recorded</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: ADD STUDENT RECORD -->
+  <div id="modal-add-student" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-200">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-base text-slate-900">Add New Student Record</h3>
+        <button onclick="closeAddStudentModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+
+      <form onsubmit="handleAddStudentSubmit(event)" class="space-y-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="col-span-2">
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Full Legal Name *</label>
+            <input type="text" id="add-student-name" required placeholder="e.g. Tanvi Deshpande" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">APAAR ID Reference (12 Digits)</label>
+            <input type="text" id="add-student-apaar" placeholder="12 numerical digits" maxlength="12" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600 font-mono">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Gender *</label>
+            <select id="add-student-gender" required class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600">
+              <option value="FEMALE">Female</option>
+              <option value="MALE">Male</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Date of Birth *</label>
+            <input type="date" id="add-student-dob" required value="2005-05-15" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Roll / Reg Number</label>
+            <input type="text" id="add-student-roll" placeholder="26-CSE-099" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600 font-mono">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Course &amp; Department *</label>
+            <select id="add-student-course" required class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600">
+              <option value="B.Tech Computer Science & Engineering">B.Tech Computer Science &amp; Engineering</option>
+              <option value="B.Tech Electronics & Communication">B.Tech Electronics &amp; Communication</option>
+              <option value="B.Tech Mechanical Engineering">B.Tech Mechanical Engineering</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Admission Category *</label>
+            <select id="add-student-category" required class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600">
+              <option value="GENERAL">General</option>
+              <option value="OBC_NCL">OBC-NCL</option>
+              <option value="SC">SC</option>
+              <option value="ST">ST</option>
+              <option value="EWS">EWS</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Quota / Special Category</label>
+            <select id="add-student-quota" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-blue-600">
+              <option value="NONE">Standard Merit</option>
+              <option value="NRI">NRI Quota</option>
+              <option value="OCI">OCI / PIO</option>
+              <option value="FOREIGN">Foreign National</option>
+              <option value="SUPERNUMERARY">Supernumerary (TFW / PMSSS)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-100">
+          <button type="button" onclick="closeAddStudentModal()" class="px-3.5 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold shadow">Save &amp; Validate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: QR CODE & SECURE TOKEN VIEWER -->
+  <div id="modal-qr-view" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-200 text-center space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-sm text-slate-900">Signed Verification Credential</h3>
+        <button onclick="closeQrModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+
+      <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl inline-block shadow-inner">
+        <!-- SVG Generated QR representation -->
+        <svg class="w-44 h-44 mx-auto" viewBox="0 0 100 100" fill="none">
+          <rect width="100" height="100" fill="white"/>
+          <!-- Position Marks -->
+          <rect x="10" y="10" width="24" height="24" fill="#0f2b5c"/>
+          <rect x="14" y="14" width="16" height="16" fill="white"/>
+          <rect x="17" y="17" width="10" height="10" fill="#0f2b5c"/>
+
+          <rect x="66" y="10" width="24" height="24" fill="#0f2b5c"/>
+          <rect x="70" y="14" width="16" height="16" fill="white"/>
+          <rect x="73" y="17" width="10" height="10" fill="#0f2b5c"/>
+
+          <rect x="10" y="66" width="24" height="24" fill="#0f2b5c"/>
+          <rect x="14" y="70" width="16" height="16" fill="white"/>
+          <rect x="17" y="73" width="10" height="10" fill="#0f2b5c"/>
+
+          <!-- Decorative data cells representing signed hash -->
+          <rect x="40" y="12" width="6" height="6" fill="#0f2b5c"/>
+          <rect x="50" y="18" width="8" height="6" fill="#0f2b5c"/>
+          <rect x="42" y="32" width="6" height="6" fill="#0f2b5c"/>
+          <rect x="52" y="42" width="12" height="6" fill="#0f2b5c"/>
+          <rect x="25" y="45" width="8" height="6" fill="#0f2b5c"/>
+          <rect x="70" y="45" width="10" height="6" fill="#0f2b5c"/>
+          <rect x="40" y="65" width="6" height="12" fill="#0f2b5c"/>
+          <rect x="55" y="72" width="10" height="6" fill="#0f2b5c"/>
+          <rect x="75" y="65" width="8" height="14" fill="#0f2b5c"/>
+        </svg>
+      </div>
+
+      <div class="text-left space-y-2">
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Student Name:</span>
+          <div id="modal-qr-student-name" class="text-xs font-bold text-slate-800">--</div>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Unpredictable Verification Token:</span>
+          <div id="modal-qr-token" class="text-[11px] font-mono text-blue-700 bg-slate-100 p-1.5 rounded border border-slate-200 break-all select-all">--</div>
+        </div>
+        <p class="text-[10px] text-slate-500 leading-tight">
+          <strong>Privacy Safeguard:</strong> The QR code embeds only this cryptographically random token string. No student PII or Aadhaar number is exposed inside the QR code.
+        </p>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="testVerifyFromModal()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow transition">
+          Test Verify This Credential
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: STATUTORY AICTE PDF REPORT VIEWER & PRINT -->
+  <div id="modal-pdf-view" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-[#0f2b5c] text-white flex items-center justify-center font-bold text-xs">AICTE</div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-900" id="pdf-modal-title">Statutory AICTE Inspection Dossier</h3>
+            <p class="text-[10px] text-slate-500">Official Government Record • Confidential</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded text-xs font-semibold shadow flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Print / Save as PDF
+          </button>
+          <button onclick="closePrintPdfModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+        </div>
+      </div>
+
+      <!-- Printable Document Canvas -->
+      <div id="pdf-printable-body" class="p-6 bg-slate-50 rounded-xl border border-slate-200 space-y-4 font-serif text-slate-900 text-xs">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT STATE ENGINE & INTERACTIVE CONTROLLERS -->
+  <script>
+    // --- STATE MANAGEMENT ---
+    const STATE = {
+      currentUser: null, // null | user object
+      activeTab: 'dashboard',
+      users: [
+        {
+          username: 'aicte_officer',
+          email: 'officer@aicte-india.org',
+          password: 'password123',
+          staffId: 'AICTE-HQ-001',
+          fullName: 'Dr. Ramesh Kumar (Director AICTE)',
+          department: 'Bureau of Approval',
+          role: 'ROLE_AICTE_ADMIN',
+          institutionId: null,
+          institutionName: 'AICTE Central Headquarters, New Delhi',
+          isApproved: true
+        },
+        {
+          username: 'diet_admin',
+          email: 'registrar@diet.ac.in',
+          password: 'password123',
+          staffId: 'DIET-REG-001',
+          fullName: 'Prof. Sunita Sharma',
+          department: 'Academic Affairs',
+          role: 'ROLE_INSTITUTION_ADMIN',
+          institutionId: 'inst-1',
+          institutionName: 'Delhi Institute of Engineering & Technology',
+          isApproved: true
+        },
+        {
+          username: 'mnit_admin',
+          email: 'registrar@mnit.edu.in',
+          password: 'password123',
+          staffId: 'MNIT-REG-002',
+          fullName: 'Prof. Arvind Deshmukh',
+          department: 'Academic Affairs',
+          role: 'ROLE_INSTITUTION_ADMIN',
+          institutionId: 'inst-2',
+          institutionName: 'Maharashtra National Institute of Technology',
+          isApproved: true
+        }
+      ],
+      institutions: [
+        { id: 'inst-1', code: '1-AICTE-DELHI-001', name: 'Delhi Institute of Engineering & Technology', state: 'Delhi' },
+        { id: 'inst-2', code: '1-AICTE-MAHA-002', name: 'Maharashtra National Institute of Technology', state: 'Maharashtra' },
+        { id: 'inst-3', code: '1-AICTE-KARN-003', name: 'Bangalore Institute of Applied Sciences', state: 'Karnataka' }
+      ],
+      approvedIntake: [
+        { institutionId: 'inst-1', course: 'B.Tech Computer Science & Engineering', department: 'Engineering & Technology', approved: 120, nriQuota: 6, supernumeraryQuota: 12 },
+        { institutionId: 'inst-1', course: 'B.Tech Electronics & Communication', department: 'Engineering & Technology', approved: 60, nriQuota: 3, supernumeraryQuota: 6 },
+        { institutionId: 'inst-2', course: 'B.Tech Computer Science & Engineering', department: 'Engineering & Technology', approved: 180, nriQuota: 9, supernumeraryQuota: 18 },
+        { institutionId: 'inst-2', course: 'B.Tech Mechanical Engineering', department: 'Engineering & Technology', approved: 60, nriQuota: 3, supernumeraryQuota: 6 }
+      ],
+      students: [
+        {
+          id: 's1',
+          name: 'Aarav Patel',
+          gender: 'MALE',
+          dob: '2005-04-12',
+          apaarId: '982345012344',
+          institutionId: 'inst-1',
+          course: 'B.Tech Computer Science & Engineering',
+          academicYear: '2026-2027',
+          rollNo: '26-CSE-001',
+          category: 'GENERAL',
+          isNri: false,
+          isSupernumerary: false,
+          enrolmentStatus: 'ACTIVE',
+          verificationStatus: 'MOCK_VERIFIED',
+          verificationToken: 'tok_sec_982345012344_aicte_verified_sig'
+        },
+        {
+          id: 's2',
+          name: 'Priya Iyer',
+          gender: 'FEMALE',
+          dob: '2005-08-23',
+          apaarId: '814529081239',
+          institutionId: 'inst-1',
+          course: 'B.Tech Computer Science & Engineering',
+          academicYear: '2026-2027',
+          rollNo: '26-CSE-002',
+          category: 'OBC_NCL',
+          isNri: false,
+          isSupernumerary: false,
+          enrolmentStatus: 'ACTIVE',
+          verificationStatus: 'MOCK_VERIFIED',
+          verificationToken: 'tok_sec_814529081239_aicte_verified_sig'
+        },
+        {
+          id: 's3',
+          name: 'Rohan Verma',
+          gender: 'MALE',
+          dob: '2004-11-05',
+          apaarId: '12345', // Format error (<12 digits)
+          institutionId: 'inst-1',
+          course: 'B.Tech Computer Science & Engineering',
+          academicYear: '2026-2027',
+          rollNo: '26-CSE-003',
+          category: 'SC',
+          isNri: false,
+          isSupernumerary: false,
+          enrolmentStatus: 'ACTIVE',
+          verificationStatus: 'UNVERIFIED',
+          verificationToken: 'tok_sec_12345_unverified'
+        },
+        {
+          id: 's4',
+          name: 'Ananya Sengupta',
+          gender: 'FEMALE',
+          dob: '2005-01-30',
+          apaarId: '', // Missing APAAR
+          institutionId: 'inst-1',
+          course: 'B.Tech Electronics & Communication',
+          academicYear: '2026-2027',
+          rollNo: '26-ECE-001',
+          category: 'GENERAL',
+          isNri: false,
+          isSupernumerary: false,
+          enrolmentStatus: 'ACTIVE',
+          verificationStatus: 'UNVERIFIED',
+          verificationToken: 'tok_sec_ananya_missing'
+        },
+        {
+          id: 's5',
+          name: 'Karan Johar Sharma',
+          gender: 'MALE',
+          dob: '2005-06-19',
+          apaarId: '773412095621',
+          institutionId: 'inst-1',
+          course: 'B.Tech Computer Science & Engineering',
+          academicYear: '2026-2027',
+          rollNo: '26-CSE-045',
+          category: 'GENERAL',
+          isNri: false,
+          isSupernumerary: false,
+          enrolmentStatus: 'ACTIVE',
+          verificationStatus: 'MOCK_VERIFIED',
+          verificationToken: 'tok_sec_773412095621_dual_enrolled_flag'
+        },
+        {
+          id: 's6',
+          name: 'Karan Johar Sharma', // Intentional cross-institution dual active match!
+          gender: 'MALE',
+          dob: '2005-06-19',
+          apaarId: '773412095621',
+          institutionId: 'inst-2', // Admitted also in MNIT Pune
+          course: 'B.Tech Computer Science & Engineering',
+          academicYear: '2026-2027',
+          rollNo: '26-MNIT-112',
+          category: 'GENERAL',
+          isNri: false,
+          isSupernumerary: false,
+          enrolmentStatus: 'ACTIVE',
+          verificationStatus: 'MOCK_VERIFIED',
+          verificationToken: 'tok_sec_773412095621_dual_enrolled_flag'
+        }
+      ],
+      auditLogs: [
+        { timestamp: '2026-10-27 10:15:30', user: 'Prof. Sunita Sharma', role: 'ROLE_INSTITUTION_ADMIN', action: 'BATCH_VALIDATION', entity: 'ENROLMENTS', ip: '192.168.1.45', details: 'Automated 12-digit format & quota scan triggered' },
+        { timestamp: '2026-10-27 09:40:12', user: 'Dr. Ramesh Kumar', role: 'ROLE_AICTE_ADMIN', action: 'CROSS_DUPLICATE_AUDIT', entity: 'STUDENTS', ip: '14.139.58.12', details: 'Cross-institution active match detected for APAAR 773412095621' },
+        { timestamp: '2026-10-27 08:30:00', user: 'Public Verifier', role: 'PUBLIC', action: 'TOKEN_VERIFY', entity: 'VERIFICATION_TOKEN', ip: '103.21.125.88', details: 'Successful token lookup for student Aarav Patel' }
+      ]
+    };
+
+    // --- NAVIGATION HELPERS ---
+    function navigateTo(view) {
+      document.getElementById('view-landing').classList.add('hidden');
+      document.getElementById('view-login').classList.add('hidden');
+      document.getElementById('view-signup').classList.add('hidden');
+      document.getElementById('view-portal').classList.add('hidden');
+      document.getElementById('view-public-verify').classList.add('hidden');
+
+      // Clear any previous error/success notifications
+      const loginErr = document.getElementById('login-error-msg');
+      const loginSuccess = document.getElementById('login-success-msg');
+      if (loginErr) loginErr.classList.add('hidden');
+      if (loginSuccess) loginSuccess.classList.add('hidden');
+
+      const signupErr = document.getElementById('signup-error-msg');
+      const signupSuccess = document.getElementById('signup-success-msg');
+      if (signupErr) signupErr.classList.add('hidden');
+      if (signupSuccess) signupSuccess.classList.add('hidden');
+
+      if (view === 'landing') {
+        document.getElementById('view-landing').classList.remove('hidden');
+      } else if (view === 'login') {
+        document.getElementById('view-login').classList.remove('hidden');
+      } else if (view === 'signup') {
+        document.getElementById('view-signup').classList.remove('hidden');
+      } else if (view === 'portal') {
+        if (!STATE.currentUser) {
+          // Protect officer-only pages against unauthorized access
+          navigateTo('login');
+          const err = document.getElementById('login-error-msg');
+          if (err) {
+            err.innerText = "Access Restricted: Please sign in with authorized regulatory credentials.";
+            err.classList.remove('hidden');
+          }
+          return;
+        }
+        document.getElementById('view-portal').classList.remove('hidden');
+        renderPortalView();
+      } else if (view === 'public-verify') {
+        document.getElementById('view-public-verify').classList.remove('hidden');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchTab(tabId) {
+      STATE.activeTab = tabId;
+      const tabs = ['dashboard', 'students', 'bulk-upload', 'validation', 'intake', 'reports', 'audit-logs'];
+      tabs.forEach(t => {
+        const content = document.getElementById(`tab-content-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (content) content.classList.add('hidden');
+        if (btn) {
+          btn.classList.remove('bg-blue-600', 'text-white');
+          btn.classList.add('text-slate-300', 'hover:bg-slate-800');
+        }
+      });
+
+      const activeContent = document.getElementById(`tab-content-${tabId}`);
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeContent) activeContent.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+        activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+      }
+
+      // Refresh specific tab contents
+      if (tabId === 'dashboard') renderDashboard();
+      if (tabId === 'students') renderStudentsTable();
+      if (tabId === 'validation') renderValidationResults();
+      if (tabId === 'intake') renderIntakeMonitor();
+      if (tabId === 'audit-logs') renderAuditLogs();
+    }
+
+    // --- AUTHENTICATION & REGISTRATION ENGINE ---
+    function openLoginForRole(preferredRole) {
+      navigateTo('login');
+      if (preferredRole === 'AICTE_ADMIN') {
+        presetLogin('aicte_officer');
+      } else {
+        presetLogin('diet_admin');
+      }
+    }
+
+    function presetLogin(username) {
+      const u = STATE.users.find(x => x.username === username || x.email === username);
+      if (u) {
+        document.getElementById('login-input-username').value = u.username;
+        document.getElementById('login-input-password').value = u.password;
+      }
+    }
+
+    function handleForgotPassword() {
+      alert("AICTE Regulatory Officer Password Reset:\n\nTo reset your official credentials, please contact the AICTE IT Directorate Support Cell at it-support@aicte-india.org with your verified Staff ID and departmental details.");
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('login-input-username').value.trim();
+      const pwd = document.getElementById('login-input-password').value;
+      const errBox = document.getElementById('login-error-msg');
+      const successBox = document.getElementById('login-success-msg');
+      errBox.classList.add('hidden');
+      successBox.classList.add('hidden');
+
+      const user = STATE.users.find(u => 
+        (u.username.toLowerCase() === identifier.toLowerCase() || 
+         u.email.toLowerCase() === identifier.toLowerCase() || 
+         (u.staffId && u.staffId.toLowerCase() === identifier.toLowerCase()))
+      );
+
+      if (!user || user.password !== pwd) {
+        errBox.innerText = "Invalid Email/Username or password. Please verify credentials.";
+        errBox.classList.remove('hidden');
+        addAuditLog('LOGIN_FAILED', 'AUTH', `Failed sign-in attempt for identifier: ${identifier}`);
+        return;
+      }
+
+      // Verify whether newly registered user is awaiting staff verification / approval
+      if (user.isApproved === false) {
+        errBox.innerText = "Account Pending Staff Verification: Your Staff ID is currently awaiting administrative approval by the AICTE Regulatory Directorate. Please contact your zonal administrator to expedite verification.";
+        errBox.classList.remove('hidden');
+        addAuditLog('LOGIN_BLOCKED_UNVERIFIED', 'AUTH', `Unverified staff login attempt: ${user.staffId}`);
+        return;
+      }
+
+      STATE.currentUser = user;
+      addAuditLog('LOGIN_SUCCESS', 'AUTH', `Regulatory Officer ${user.fullName} signed in.`);
+      onUserLoggedIn();
+    }
+
+    function handleSignUpSubmit(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('signup-fullname').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const staffId = document.getElementById('signup-staffid').value.trim();
+      const department = document.getElementById('signup-department').value.trim();
+      const password = document.getElementById('signup-password').value;
+
+      const errBox = document.getElementById('signup-error-msg');
+      const successBox = document.getElementById('signup-success-msg');
+      errBox.classList.add('hidden');
+      successBox.classList.add('hidden');
+
+      // 1. Validate all five required fields
+      if (!fullName || !email || !staffId || !department || !password) {
+        errBox.innerText = "Validation Error: All five fields are mandatory.";
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      // 2. Validate staff email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errBox.innerText = "Invalid Staff Email ID format. Please provide a valid institutional email.";
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      // 3. Ensure Staff ID uniqueness
+      const staffExists = STATE.users.some(u => u.staffId && u.staffId.toLowerCase() === staffId.toLowerCase());
+      if (staffExists) {
+        errBox.innerText = `Staff ID '${staffId}' is already registered in the AICTE directory.`;
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      // 4. Ensure Email uniqueness
+      const emailExists = STATE.users.some(u => u.email.toLowerCase() === email.toLowerCase());
+      if (emailExists) {
+        errBox.innerText = `Staff Email '${email}' is already associated with an existing account.`;
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      // 5. Password length check
+      if (password.length < 6) {
+        errBox.innerText = "Password must be at least 6 characters long.";
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      // Register new user with pending staff verification status
+      const newUser = {
+        username: email,
+        email: email,
+        password: password,
+        staffId: staffId,
+        fullName: fullName,
+        department: department,
+        role: 'ROLE_AICTE_ADMIN',
+        institutionId: null,
+        institutionName: 'AICTE Regulatory Directorate',
+        isApproved: false // Newly registered users must undergo staff verification/approval
+      };
+
+      STATE.users.push(newUser);
+      addAuditLog('STAFF_SIGNUP', 'AUTH', `New staff registration: ${fullName} (${staffId}, ${department}) pending approval.`);
+
+      successBox.innerText = "Registration successful! Your staff credentials have been submitted for administrator verification. Redirecting to Login...";
+      successBox.classList.remove('hidden');
+
+      // Clear input fields
+      document.getElementById('signup-fullname').value = '';
+      document.getElementById('signup-email').value = '';
+      document.getElementById('signup-staffid').value = '';
+      document.getElementById('signup-department').value = '';
+      document.getElementById('signup-password').value = '';
+
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        navigateTo('login');
+        const loginSuccess = document.getElementById('login-success-msg');
+        if (loginSuccess) {
+          loginSuccess.innerText = `Registration submitted for Staff ID: ${staffId}. Awaiting administrative approval.`;
+          loginSuccess.classList.remove('hidden');
+        }
+      }, 2000);
+    }
+
+    function onUserLoggedIn() {
+      document.getElementById('auth-status-bar').classList.remove('hidden');
+      document.getElementById('logged-user-name').innerText = STATE.currentUser.fullName;
+      document.getElementById('logged-user-role').innerText = STATE.currentUser.institutionName;
+      navigateTo('portal');
+    }
+
+    function logout() {
+      STATE.currentUser = null;
+      document.getElementById('auth-status-bar').classList.add('hidden');
+      navigateTo('landing');
+    }
+
+    // --- RENDER PORTAL ---
+    function renderPortalView() {
+      if (!STATE.currentUser) {
+        switchRoleAndGo('INSTITUTION_ADMIN');
+      }
+
+      const isAicte = STATE.currentUser.role === 'ROLE_AICTE_ADMIN';
+      document.getElementById('portal-sidebar-context').innerText = isAicte ? 'CYPHER AICTE Authority' : 'CYPHER Institution Portal';
+      document.getElementById('portal-sidebar-inst-name').innerText = STATE.currentUser.institutionName;
+      document.getElementById('portal-sidebar-inst-code').innerText = isAicte ? 'HQ-CENTRAL-DELHI' : '1-AICTE-DELHI-001';
+
+      const aicteBanner = document.getElementById('aicte-banner-view');
+      const dashHeading = document.getElementById('dash-heading');
+      if (isAicte) {
+        aicteBanner.classList.remove('hidden');
+        dashHeading.innerText = 'CYPHER • AICTE National Student Intake & Regulatory Oversight';
+      } else {
+        aicteBanner.classList.add('hidden');
+        dashHeading.innerText = `${STATE.currentUser.institutionName} - CYPHER Admission Desk`;
+      }
+
+      switchTab(STATE.activeTab);
+    }
+
+    // Filter students by institution for Institution Admin (Tenant Isolation)
+    function getAuthorizedStudents() {
+      if (STATE.currentUser && STATE.currentUser.role === 'ROLE_AICTE_ADMIN') {
+        return STATE.students;
+      }
+      return STATE.students.filter(s => s.institutionId === STATE.currentUser.institutionId);
+    }
+
+    // --- DASHBOARD TELEMETRY ---
+    function renderDashboard() {
+      const students = getAuthorizedStudents();
+      const total = students.length;
+      const validApaar = students.filter(s => s.apaarId && s.apaarId.length === 12).length;
+      
+      // Calculate anomalies
+      const anomalies = runAnomaliesCheck(students);
+
+      document.getElementById('kpi-total-enrolled').innerText = total;
+      document.getElementById('kpi-apaar-valid').innerHTML = `${validApaar} <span class="text-xs font-normal text-slate-500">/ ${total}</span>`;
+      document.getElementById('kpi-anomalies').innerText = `${anomalies.length} Flags`;
+      document.getElementById('tab-badge-alerts').innerText = anomalies.length;
+
+      // Render intake utilization summary
+      renderDashboardIntake();
+
+      // Render recent alerts list
+      const alertsContainer = document.getElementById('dash-alerts-list');
+      if (anomalies.length === 0) {
+        alertsContainer.innerHTML = '<div class="p-3 bg-emerald-50 text-emerald-800 text-xs rounded-lg font-medium">No active validation anomalies detected!</div>';
+      } else {
+        alertsContainer.innerHTML = anomalies.slice(0, 3).map(a => `
+          <div class="p-3 rounded-lg border ${a.severity === 'CRITICAL' ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'} flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="badge ${a.severity === 'CRITICAL' ? 'bg-red-200 text-red-900' : 'bg-amber-200 text-amber-900'}">${a.category}</span>
+                <span class="text-xs font-bold text-slate-900">${a.studentName}</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1">${a.message}</p>
+            </div>
+            <button onclick="switchTab('validation')" class="text-xs font-semibold text-blue-700 hover:underline">Review &rarr;</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderDashboardIntake() {
+      const tbody = document.getElementById('dash-intake-tbody');
+      const isAicte = STATE.currentUser.role === 'ROLE_AICTE_ADMIN';
+      const relevantIntake = isAicte ? STATE.approvedIntake : STATE.approvedIntake.filter(i => i.institutionId === STATE.currentUser.institutionId);
+
+      tbody.innerHTML = relevantIntake.map(item => {
+        const inst = STATE.institutions.find(x => x.id === item.institutionId);
+        const enrolledCount = STATE.students.filter(s => s.institutionId === item.institutionId && s.course === item.course).length;
+        const pct = Math.round((enrolledCount / item.approved) * 100);
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="py-2.5 px-3">
+              <div class="font-bold text-slate-800">${item.course}</div>
+              <div class="text-[11px] text-slate-400">${inst ? inst.name : ''}</div>
+            </td>
+            <td class="py-2.5 px-3 font-semibold text-slate-700">${item.approved} Seats</td>
+            <td class="py-2.5 px-3 font-bold text-blue-700">${enrolledCount} Admitted</td>
+            <td class="py-2.5 px-3 text-slate-600">NRI: ${item.nriQuota} | Supernumerary: ${item.supernumeraryQuota}</td>
+            <td class="py-2.5 px-3">
+              <div class="flex items-center gap-2">
+                <div class="w-20 bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div class="bg-blue-600 h-full" style="width: ${Math.min(pct, 100)}%"></div>
+                </div>
+                <span class="font-semibold text-[11px]">${pct}%</span>
+              </div>
+            </td>
+            <td class="py-2.5 px-3">
+              <span class="badge bg-emerald-100 text-emerald-800">Approved</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // --- ANOMALY & VALIDATION ENGINE CORE ---
+    function runAnomaliesCheck(students) {
+      const flags = [];
+
+      // 1. Check Missing APAAR ID
+      students.forEach(s => {
+        if (!s.apaarId || s.apaarId.trim() === '') {
+          flags.push({
+            id: `flag-missing-${s.id}`,
+            category: 'MISSING_APAAR',
+            severity: 'WARNING',
+            studentName: s.name,
+            studentId: s.id,
+            apaar: 'None',
+            message: 'Student admitted without mandatory APAAR ID reference. Provisional grace period.'
+          });
+        }
+      });
+
+      // 2. Check Invalid Format (Must be 12 digits numeric)
+      students.forEach(s => {
+        if (s.apaarId && s.apaarId.trim() !== '') {
+          const isTwelveDigits = /^\d{12}$/.test(s.apaarId);
+          if (!isTwelveDigits) {
+            flags.push({
+              id: `flag-fmt-${s.id}`,
+              category: 'INVALID_APAAR_FORMAT',
+              severity: 'ERROR',
+              studentName: s.name,
+              studentId: s.id,
+              apaar: s.apaarId,
+              message: `APAAR ID '${s.apaarId}' fails 12-digit numerical requirement. Possible corrupt entry.`
+            });
+          }
+        }
+      });
+
+      // 3. Cross-Institution Active Duplicate Enrolment Check
+      const apaarMap = {};
+      STATE.students.forEach(s => {
+        if (s.apaarId && /^\d{12}$/.test(s.apaarId) && s.enrolmentStatus === 'ACTIVE') {
+          if (!apaarMap[s.apaarId]) {
+            apaarMap[s.apaarId] = [];
+          }
+          apaarMap[s.apaarId].push(s);
+        }
+      });
+
+      Object.keys(apaarMap).forEach(apaar => {
+        const matches = apaarMap[apaar];
+        if (matches.length > 1) {
+          // Distinct institutions
+          const instIds = new Set(matches.map(m => m.institutionId));
+          if (instIds.size > 1) {
+            const instNames = matches.map(m => {
+              const i = STATE.institutions.find(x => x.id === m.institutionId);
+              return i ? i.name : m.institutionId;
+            }).join(' AND ');
+
+            matches.forEach(m => {
+              flags.push({
+                id: `flag-cross-${m.id}`,
+                category: 'INTER_INSTITUTION_DUPLICATE',
+                severity: 'CRITICAL',
+                studentName: m.name,
+                studentId: m.id,
+                apaar: m.apaarId,
+                message: `Active dual enrolment found across multiple colleges (${instNames}). Review required: Verify if transfer / migration in progress or dual admission.`
+              });
+            });
+          }
+        }
+      });
+
+      return flags;
+    }
+
+    function runValidationEngine() {
+      renderDashboard();
+      renderValidationResults();
+      addAuditLog('MANUAL_VALIDATION_TRIGGERED', 'VALIDATION_ENGINE', 'Full scan of records completed');
+      alert('Validation Engine execution complete! Anomaly flags refreshed.');
+    }
+
+    function renderValidationResults() {
+      const students = getAuthorizedStudents();
+      const anomalies = runAnomaliesCheck(students);
+      const filterType = document.getElementById('filter-anomaly-type').value;
+
+      const filtered = filterType === 'ALL' ? anomalies : anomalies.filter(a => a.category === filterType);
+      const container = document.getElementById('validation-items-container');
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-slate-500 text-xs">No anomalies found under selected filter.</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="py-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="badge ${item.severity === 'CRITICAL' ? 'bg-red-100 text-red-800' : (item.severity === 'ERROR' ? 'bg-orange-100 text-orange-800' : 'bg-amber-100 text-amber-800')}">${item.category}</span>
+              <span class="font-bold text-slate-900 text-xs">${item.studentName}</span>
+              <span class="font-mono text-[11px] text-slate-500">APAAR: ${item.apaar}</span>
+            </div>
+            <p class="text-xs text-slate-600">${item.message}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="resolveAnomaly('${item.id}', 'MARK_TRANSFER')" class="px-2.5 py-1 text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 rounded border border-blue-200">
+              Mark as Transfer
+            </button>
+            <button onclick="resolveAnomaly('${item.id}', 'DISMISS')" class="px-2.5 py-1 text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 rounded">
+              Resolve / Dismiss
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function resolveAnomaly(flagId, action) {
+      alert(`Action '${action}' applied to ${flagId}. Audit trail updated.`);
+      addAuditLog('ANOMALY_RESOLVED', 'VALIDATION', `Resolved with action: ${action}`);
+      renderDashboard();
+      renderValidationResults();
+    }
+
+    // --- STUDENTS TABLE ---
+    function renderStudentsTable() {
+      const students = getAuthorizedStudents();
+      const search = (document.getElementById('filter-search')?.value || '').toLowerCase();
+      const course = document.getElementById('filter-course')?.value || 'ALL';
+      const apaarStatus = document.getElementById('filter-apaar-status')?.value || 'ALL';
+      const category = document.getElementById('filter-category')?.value || 'ALL';
+
+      const filtered = students.filter(s => {
+        const matchesSearch = s.name.toLowerCase().includes(search) || 
+                              (s.apaarId && s.apaarId.includes(search)) || 
+                              s.rollNo.toLowerCase().includes(search);
+        const matchesCourse = course === 'ALL' || s.course === course;
+        const matchesCat = category === 'ALL' || s.category === category;
+        const isValid12 = s.apaarId && /^\d{12}$/.test(s.apaarId);
+        const matchesApaar = apaarStatus === 'ALL' || (apaarStatus === 'VALID' ? isValid12 : !isValid12);
+        return matchesSearch && matchesCourse && matchesCat && matchesApaar;
+      });
+
+      const tbody = document.getElementById('students-table-body');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-slate-400">No student records match search criteria.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(s => {
+        const inst = STATE.institutions.find(x => x.id === s.institutionId);
+        const isValidApaar = s.apaarId && /^\d{12}$/.test(s.apaarId);
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4">
+              <div class="font-bold text-slate-900">${s.name}</div>
+              <div class="text-[11px] text-slate-500 font-mono">Roll: ${s.rollNo} • DOB: ${s.dob}</div>
+            </td>
+            <td class="py-3 px-4">
+              ${isValidApaar ? 
+                `<span class="font-mono font-semibold text-blue-900">${s.apaarId}</span> <span class="badge bg-emerald-50 text-emerald-700 ml-1">Valid 12-Digit</span>` : 
+                (s.apaarId ? `<span class="font-mono text-red-600 font-bold">${s.apaarId}</span> <span class="badge bg-red-50 text-red-700 ml-1">Format Error</span>` : `<span class="badge bg-amber-50 text-amber-700">Missing APAAR</span>`)
+              }
+            </td>
+            <td class="py-3 px-4">
+              <div class="font-medium text-slate-800">${s.course}</div>
+              <div class="text-[11px] text-slate-500">${inst ? inst.name : ''}</div>
+            </td>
+            <td class="py-3 px-4">
+              <span class="badge bg-slate-100 text-slate-800">${s.category}</span>
+              ${s.isSupernumerary ? '<span class="badge bg-purple-100 text-purple-800 ml-1">Supernumerary</span>' : ''}
+              ${s.isNri ? '<span class="badge bg-amber-100 text-amber-800 ml-1">NRI</span>' : ''}
+            </td>
+            <td class="py-3 px-4">
+              <span class="badge bg-blue-100 text-blue-800">${s.enrolmentStatus}</span>
+            </td>
+            <td class="py-3 px-4">
+              ${s.verificationStatus === 'MOCK_VERIFIED' ? 
+                `<span class="badge bg-emerald-100 text-emerald-800">Mock Verified</span>` : 
+                `<span class="badge bg-slate-100 text-slate-600">Unverified</span>`
+              }
+            </td>
+            <td class="py-3 px-4 text-right">
+              <button onclick="openQrModalForStudent('${s.id}')" class="px-2.5 py-1 text-xs font-semibold bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded shadow-sm inline-flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                QR Token
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // --- INTAKE MONITOR TAB ---
+    function renderIntakeMonitor() {
+      const container = document.getElementById('intake-cards-container');
+      const isAicte = STATE.currentUser.role === 'ROLE_AICTE_ADMIN';
+      const relevantIntake = isAicte ? STATE.approvedIntake : STATE.approvedIntake.filter(i => i.institutionId === STATE.currentUser.institutionId);
+
+      container.innerHTML = relevantIntake.map(item => {
+        const inst = STATE.institutions.find(x => x.id === item.institutionId);
+        const enrolled = STATE.students.filter(s => s.institutionId === item.institutionId && s.course === item.course);
+        const count = enrolled.length;
+        const pct = Math.round((count / item.approved) * 100);
+
+        return `
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <div class="text-xs font-semibold text-blue-700">${inst ? inst.name : ''}</div>
+                <h3 class="text-base font-bold text-slate-900">${item.course}</h3>
+                <span class="text-xs text-slate-500">${item.department} • Academic Year 2026-2027</span>
+              </div>
+              <div class="text-right">
+                <span class="badge ${pct > 100 ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800'} text-xs">
+                  ${pct > 100 ? 'EXCESS ADMISSION WARNING' : 'WITHIN APPROVED QUOTA'}
+                </span>
+                <div class="text-xs text-slate-500 mt-1">${count} Admitted / ${item.approved} Sanctioned</div>
+              </div>
+            </div>
+
+            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+              <div class="bg-blue-600 h-full rounded-full transition-all" style="width: ${Math.min(pct, 100)}%"></div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-xs pt-2 border-t border-slate-100">
+              <div class="p-2 rounded bg-slate-50">
+                <span class="text-slate-400 block text-[10px] uppercase font-semibold">General Sanction</span>
+                <span class="font-bold text-slate-800">${item.approved} Seats</span>
+              </div>
+              <div class="p-2 rounded bg-slate-50">
+                <span class="text-slate-400 block text-[10px] uppercase font-semibold">Approved NRI Quota</span>
+                <span class="font-bold text-slate-800">${item.nriQuota} Seats</span>
+              </div>
+              <div class="p-2 rounded bg-slate-50">
+                <span class="text-slate-400 block text-[10px] uppercase font-semibold">Supernumerary Quota</span>
+                <span class="font-bold text-slate-800">${item.supernumeraryQuota} Seats</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- BULK CSV PROCESSING ---
+    let parsedCsvRows = [];
+
+    function loadSampleCsvDataset() {
+      const syntheticCsvText = `student_name,gender,date_of_birth,apaar_id,course_name,academic_year,roll_number,admission_category,is_nri,is_supernumerary
+Vikramaditya Roy,MALE,2005-02-14,992144321155,B.Tech Computer Science & Engineering,2026-2027,26-CSE-101,GENERAL,FALSE,FALSE
+Meera Nandakumar,FEMALE,2005-09-08,881923014562,B.Tech Computer Science & Engineering,2026-2027,26-CSE-102,OBC_NCL,FALSE,FALSE
+Siddharth Sen,MALE,2004-12-19,,B.Tech Computer Science & Engineering,2026-2027,26-CSE-103,GENERAL,FALSE,FALSE
+Deepika Sharma,FEMALE,2005-07-25,12345,B.Tech Electronics & Communication,2026-2027,26-ECE-101,SC,FALSE,FALSE
+Kavita Rathore,FEMALE,2005-03-11,992144321155,B.Tech Computer Science & Engineering,2026-2027,26-CSE-104,EWS,FALSE,FALSE`;
+
+      processRawCsv(syntheticCsvText);
+    }
+
+    function handleCsvFileSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        processRawCsv(evt.target.result);
+      };
+      reader.readAsText(file);
+    }
+
+    function processRawCsv(text) {
+      const lines = text.trim().split(/\r\n|\n/);
+      if (lines.length < 2) {
+        alert('Invalid CSV format: Requires header and at least one data row.');
+        return;
+      }
+      const headers = lines[0].split(',').map(h => h.trim());
+      parsedCsvRows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const vals = lines[i].split(',').map(v => v.trim());
+        const row = {};
+        headers.forEach((h, idx) => {
+          row[h] = vals[idx] || '';
+        });
+        parsedCsvRows.push(row);
+      }
+
+      renderCsvPreview();
+    }
+
+    function renderCsvPreview() {
+      const container = document.getElementById('csv-preview-container');
+      const subtitle = document.getElementById('csv-preview-subtitle');
+      const btn = document.getElementById('btn-ingest-csv');
+
+      subtitle.innerText = `${parsedCsvRows.length} student records parsed from CSV`;
+      btn.disabled = parsedCsvRows.length === 0;
+
+      let html = `
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-100 text-slate-700 uppercase font-semibold border-b">
+            <tr>
+              <th class="p-2">#</th>
+              <th class="p-2">Name</th>
+              <th class="p-2">APAAR ID</th>
+              <th class="p-2">Course</th>
+              <th class="p-2">Pre-Ingestion Check</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+      `;
+
+      parsedCsvRows.forEach((r, idx) => {
+        let checkMsg = '<span class="badge bg-emerald-100 text-emerald-800">Pass</span>';
+        if (!r.apaar_id) {
+          checkMsg = '<span class="badge bg-amber-100 text-amber-800">Missing APAAR</span>';
+        } else if (!/^\d{12}$/.test(r.apaar_id)) {
+          checkMsg = '<span class="badge bg-red-100 text-red-800">Invalid Format (&ne;12 Digits)</span>';
+        }
+
+        html += `
+          <tr class="hover:bg-slate-50">
+            <td class="p-2 font-mono text-slate-400">${idx + 1}</td>
+            <td class="p-2 font-bold text-slate-800">${r.student_name}</td>
+            <td class="p-2 font-mono">${r.apaar_id || '<em>None</em>'}</td>
+            <td class="p-2">${r.course_name}</td>
+            <td class="p-2">${checkMsg}</td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function confirmAndIngestCsv() {
+      if (parsedCsvRows.length === 0) return;
+      const targetInst = STATE.currentUser ? STATE.currentUser.institutionId || 'inst-1' : 'inst-1';
+
+      parsedCsvRows.forEach((r, idx) => {
+        STATE.students.push({
+          id: `csv-ingest-${Date.now()}-${idx}`,
+          name: r.student_name,
+          gender: r.gender || 'FEMALE',
+          dob: r.date_of_birth || '2005-01-01',
+          apaarId: r.apaar_id || '',
+          institutionId: targetInst,
+          course: r.course_name || 'B.Tech Computer Science & Engineering',
+          academicYear: r.academic_year || '2026-2027',
+          rollNo: r.roll_number || `26-IMP-${idx+1}`,
+          category: r.admission_category || 'GENERAL',
+          isNri: r.is_nri === 'TRUE',
+          isSupernumerary: r.is_supernumerary === 'TRUE',
+          enrolmentStatus: 'ACTIVE',
+          verificationStatus: (r.apaar_id && /^\d{12}$/.test(r.apaar_id)) ? 'MOCK_VERIFIED' : 'UNVERIFIED',
+          verificationToken: `tok_sec_batch_${Date.now()}_${idx}`
+        });
+      });
+
+      addAuditLog('CSV_BULK_INGEST', 'STUDENT_ROSTER', `${parsedCsvRows.length} records ingested via CSV`);
+      alert(`Success: ${parsedCsvRows.length} student records successfully ingested into institution database!`);
+      parsedCsvRows = [];
+      renderCsvPreview();
+      switchTab('students');
+    }
+
+    // --- ADD STUDENT MODAL ---
+    function openAddStudentModal() {
+      document.getElementById('modal-add-student').classList.remove('hidden');
+    }
+
+    function closeAddStudentModal() {
+      document.getElementById('modal-add-student').classList.add('hidden');
+    }
+
+    function handleAddStudentSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('add-student-name').value;
+      const apaar = document.getElementById('add-student-apaar').value;
+      const gender = document.getElementById('add-student-gender').value;
+      const dob = document.getElementById('add-student-dob').value;
+      const roll = document.getElementById('add-student-roll').value;
+      const course = document.getElementById('add-student-course').value;
+      const category = document.getElementById('add-student-category').value;
+      const quota = document.getElementById('add-student-quota').value;
+      const instId = STATE.currentUser ? STATE.currentUser.institutionId || 'inst-1' : 'inst-1';
+
+      const newStudent = {
+        id: `s-${Date.now()}`,
+        name: name,
+        gender: gender,
+        dob: dob,
+        apaarId: apaar,
+        institutionId: instId,
+        course: course,
+        academicYear: '2026-2027',
+        rollNo: roll || `26-MAN-${Math.floor(Math.random()*1000)}`,
+        category: category,
+        isNri: quota === 'NRI',
+        isSupernumerary: quota === 'SUPERNUMERARY',
+        enrolmentStatus: 'ACTIVE',
+        verificationStatus: (apaar && /^\d{12}$/.test(apaar)) ? 'MOCK_VERIFIED' : 'UNVERIFIED',
+        verificationToken: `tok_sec_${apaar || Date.now()}_signed`
+      };
+
+      STATE.students.push(newStudent);
+      addAuditLog('CREATE_STUDENT_RECORD', 'STUDENT', `Manual entry created for ${name}`);
+      closeAddStudentModal();
+      renderDashboard();
+      renderStudentsTable();
+      alert(`Student record for '${name}' added and validated.`);
+    }
+
+    // --- QR MODAL ---
+    let currentModalStudent = null;
+
+    function openQrModalForStudent(studentId) {
+      const s = STATE.students.find(x => x.id === studentId);
+      if (!s) return;
+      currentModalStudent = s;
+      document.getElementById('modal-qr-student-name').innerText = s.name;
+      document.getElementById('modal-qr-token').innerText = s.verificationToken;
+      document.getElementById('modal-qr-view').classList.remove('hidden');
+    }
+
+    function closeQrModal() {
+      document.getElementById('modal-qr-view').classList.add('hidden');
+    }
+
+    function testVerifyFromModal() {
+      if (!currentModalStudent) return;
+      const tok = currentModalStudent.verificationToken;
+      closeQrModal();
+      navigateTo('public-verify');
+      setVerifyToken(tok);
+      document.querySelector('#view-public-verify form button[type="submit"]').click();
+    }
+
+    // --- PUBLIC VERIFICATION CONTROLLER ---
+    function setVerifyToken(token) {
+      document.getElementById('verify-input-token').value = token;
+    }
+
+    function handleVerificationQuery(e) {
+      if (e) e.preventDefault();
+      const token = document.getElementById('verify-input-token').value.trim();
+      const resultCard = document.getElementById('verify-result-card');
+      const banner = document.getElementById('verify-result-banner');
+      const icon = document.getElementById('verify-result-icon');
+      const title = document.getElementById('verify-result-title');
+      const desc = document.getElementById('verify-result-desc');
+      const queryTime = document.getElementById('res-query-time');
+
+      resultCard.classList.remove('hidden');
+      queryTime.innerText = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' IST';
+
+      // Lookup student by token
+      const match = STATE.students.find(s => s.verificationToken === token);
+
+      if (!match) {
+        // Invalid or Expired Token
+        banner.className = 'p-4 flex items-center gap-3 bg-red-100 text-red-900 border-b border-red-200';
+        icon.className = 'w-8 h-8 rounded-full flex items-center justify-center font-bold text-white bg-red-600';
+        icon.innerHTML = '&times;';
+        title.innerText = 'Invalid or Unrecognized Verification Token';
+        desc.innerText = 'No genuine student record exists for this cryptographic signature in the AICTE ledger.';
+        document.getElementById('verify-result-details').classList.add('hidden');
+        addAuditLog('PUBLIC_VERIFY_FAILED', 'VERIFICATION_TOKEN', `Lookup failed for query: ${token}`);
+        return;
+      }
+
+      // Check if student has active duplicate enrolment anomaly
+      const anomalies = runAnomaliesCheck(STATE.students);
+      const studentAnomalies = anomalies.filter(a => a.studentId === match.id);
+      const hasCriticalAnomaly = studentAnomalies.some(a => a.severity === 'CRITICAL');
+
+      document.getElementById('verify-result-details').classList.remove('hidden');
+      document.getElementById('res-student-name').innerText = match.name;
+      // Mask APAAR ID (e.g. 9823-XXXX-1234)
+      const maskedApaar = match.apaarId && match.apaarId.length === 12 ? 
+        `${match.apaarId.substring(0, 4)}-XXXX-${match.apaarId.substring(8)}` : 
+        (match.apaarId || 'Not Linked');
+      document.getElementById('res-apaar-id').innerText = maskedApaar;
+
+      const inst = STATE.institutions.find(x => x.id === match.institutionId);
+      document.getElementById('res-institution').innerText = inst ? `${inst.name} (${inst.code})` : 'AICTE Institution';
+      document.getElementById('res-course').innerText = `${match.course} • ${match.academicYear}`;
+      document.getElementById('res-enrolment-status').innerHTML = `<span class="badge bg-blue-100 text-blue-800">${match.enrolmentStatus}</span>`;
+
+      if (hasCriticalAnomaly) {
+        banner.className = 'p-4 flex items-center gap-3 bg-amber-100 text-amber-900 border-b border-amber-200';
+        icon.className = 'w-8 h-8 rounded-full flex items-center justify-center font-bold text-white bg-amber-600';
+        icon.innerHTML = '!';
+        title.innerText = 'Record Found with Administrative Anomaly Alert';
+        desc.innerText = 'This student record is registered, but flagged for active dual enrolment review under AICTE protocol.';
+        document.getElementById('res-verification-status').innerHTML = '<span class="badge bg-amber-100 text-amber-900">Pending AICTE Review</span>';
+      } else {
+        banner.className = 'p-4 flex items-center gap-3 bg-emerald-100 text-emerald-900 border-b border-emerald-200';
+        icon.className = 'w-8 h-8 rounded-full flex items-center justify-center font-bold text-white bg-emerald-600';
+        icon.innerHTML = '&#10003;';
+        title.innerText = 'Authentic AICTE Verified Record';
+        desc.innerText = 'Cryptographic token validated. Verified against institutional admission roll & APAAR Mock Gateway.';
+        document.getElementById('res-verification-status').innerHTML = '<span class="badge bg-emerald-100 text-emerald-800">Official Mock Gateway Verified</span>';
+      }
+
+      addAuditLog('PUBLIC_VERIFY_SUCCESS', 'VERIFICATION_TOKEN', `Verified token for ${match.name}`);
+    }
+
+    // --- AUDIT LOGS ---
+    function addAuditLog(action, entity, details) {
+      const now = new Date();
+      const timeStr = now.toISOString().replace('T', ' ').substring(0, 19);
+      const user = STATE.currentUser ? STATE.currentUser.fullName : 'Public Verifier';
+      const role = STATE.currentUser ? STATE.currentUser.role : 'PUBLIC';
+      STATE.auditLogs.unshift({
+        timestamp: timeStr,
+        user: user,
+        role: role,
+        action: action,
+        entity: entity,
+        ip: '127.0.0.1',
+        details: details
+      });
+    }
+
+    function renderAuditLogs() {
+      const tbody = document.getElementById('audit-table-body');
+      tbody.innerHTML = STATE.auditLogs.map(log => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-2.5 px-4 font-mono text-[11px] text-slate-500">${log.timestamp}</td>
+          <td class="py-2.5 px-4">
+            <div class="font-bold text-slate-800">${log.user}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${log.role}</div>
+          </td>
+          <td class="py-2.5 px-4"><span class="badge bg-blue-100 text-blue-900 font-mono">${log.action}</span></td>
+          <td class="py-2.5 px-4 text-slate-600 font-mono">${log.entity}</td>
+          <td class="py-2.5 px-4 font-mono text-slate-400">${log.ip}</td>
+          <td class="py-2.5 px-4 text-slate-700">${log.details}</td>
+        </tr>
+      `).join('');
+    }
+
+    // --- CSV EXPORTS FOR REPORTS ---
+    function downloadStudentRosterCsv() {
+      let csv = "student_id,name,gender,dob,apaar_id,institution,course,academic_year,roll_no,category,enrolment_status,verification_status\n";
+      STATE.students.forEach(s => {
+        const inst = STATE.institutions.find(x => x.id === s.institutionId);
+        csv += `"${s.id}","${s.name}","${s.gender}","${s.dob}","${s.apaarId || ''}","${inst ? inst.name : ''}","${s.course}","${s.academicYear}","${s.rollNo}","${s.category}","${s.enrolmentStatus}","${s.verificationStatus}"\n`;
+      });
+      triggerDownload(csv, "aicte_student_roster_2026_27.csv", "text/csv");
+      addAuditLog('REPORT_DOWNLOAD', 'REPORT', 'Exported student roster CSV');
+    }
+
+    function downloadIntakeReportCsv() {
+      let csv = "institution_code,institution_name,course,department,academic_year,approved_seats,actual_enrolled,nri_quota,supernumerary_quota\n";
+      STATE.approvedIntake.forEach(item => {
+        const inst = STATE.institutions.find(x => x.id === item.institutionId);
+        const enrolledCount = STATE.students.filter(s => s.institutionId === item.institutionId && s.course === item.course).length;
+        csv += `"${inst ? inst.code : ''}","${inst ? inst.name : ''}","${item.course}","${item.department}","2026-2027",${item.approved},${enrolledCount},${item.nriQuota},${item.supernumeraryQuota}\n`;
+      });
+      triggerDownload(csv, "aicte_approved_intake_audit_2026_27.csv", "text/csv");
+      addAuditLog('REPORT_DOWNLOAD', 'REPORT', 'Exported intake audit CSV');
+    }
+
+    function downloadAnomalyReportCsv() {
+      const anomalies = runAnomaliesCheck(STATE.students);
+      let csv = "flag_id,severity,category,student_name,student_id,apaar_id,message\n";
+      anomalies.forEach(a => {
+        csv += `"${a.id}","${a.severity}","${a.category}","${a.studentName}","${a.studentId}","${a.apaar}","${a.message.replace(/"/g, '""')}"\n`;
+      });
+      triggerDownload(csv, "aicte_validation_anomalies_report.csv", "text/csv");
+      addAuditLog('REPORT_DOWNLOAD', 'REPORT', 'Exported validation anomalies CSV');
+    }
+
+    // --- PDF PRINT PREVIEW ENGINE ---
+    function openPrintPdfModal(type) {
+      const modal = document.getElementById('modal-pdf-view');
+      const body = document.getElementById('pdf-printable-body');
+      const title = document.getElementById('pdf-modal-title');
+      modal.classList.remove('hidden');
+
+      const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' IST';
+
+      let html = `
+        <div class="text-center border-b pb-4 space-y-1">
+          <div class="font-bold text-sm tracking-widest text-[#0f2b5c]">ALL INDIA COUNCIL FOR TECHNICAL EDUCATION</div>
+          <div class="text-[10px] text-slate-500">Ministry of Education, Government of India • Nelson Mandela Marg, Vasant Kunj, New Delhi</div>
+          <div class="text-xs font-bold text-amber-600 mt-2">
+            ${type === 'ROSTER' ? 'STATUTORY STUDENT ENROLMENT MASTER ROSTER' : 'SANCTIONED INTAKE VS ACTUAL ADMISSIONS AUDIT DOSSIER'}
+          </div>
+          <div class="text-[10px] text-slate-400">Academic Year: 2026-2027 • AICTE Regulatory Officer Portal</div>
+        </div>
+      `;
+
+      if (type === 'ROSTER') {
+        title.innerText = 'AICTE Student Enrolment Master Roster (PDF)';
+        html += `
+          <div class="text-[11px] font-semibold text-slate-700 pt-2">Admitted Student Census (${STATE.students.length} Records)</div>
+          <table class="w-full text-left text-[10px] border border-slate-300 mt-2">
+            <thead class="bg-[#0f2b5c] text-white">
+              <tr>
+                <th class="p-1.5 border border-slate-400">#</th>
+                <th class="p-1.5 border border-slate-400">Student Name</th>
+                <th class="p-1.5 border border-slate-400">APAAR ID (Masked)</th>
+                <th class="p-1.5 border border-slate-400">Course &amp; Dept</th>
+                <th class="p-1.5 border border-slate-400">Category</th>
+                <th class="p-1.5 border border-slate-400">Verification Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+        `;
+        STATE.students.forEach((s, idx) => {
+          const masked = s.apaarId && s.apaarId.length === 12 ? `${s.apaarId.substring(0,4)}-XXXX-${s.apaarId.substring(8)}` : (s.apaarId || 'MISSING');
+          html += `
+            <tr>
+              <td class="p-1.5 border border-slate-300 font-mono">${idx+1}</td>
+              <td class="p-1.5 border border-slate-300 font-bold">${s.name}</td>
+              <td class="p-1.5 border border-slate-300 font-mono">${masked}</td>
+              <td class="p-1.5 border border-slate-300">${s.course}</td>
+              <td class="p-1.5 border border-slate-300">${s.category}</td>
+              <td class="p-1.5 border border-slate-300 font-semibold text-emerald-800">${s.verificationStatus}</td>
+            </tr>
+          `;
+        });
+        html += `</tbody></table>`;
+      } else {
+        title.innerText = 'AICTE Sanctioned Intake vs Actual Admitted Audit (PDF)';
+        html += `
+          <div class="text-[11px] font-semibold text-slate-700 pt-2">Institutional Quota Compliance Report</div>
+          <table class="w-full text-left text-[10px] border border-slate-300 mt-2">
+            <thead class="bg-[#0f2b5c] text-white">
+              <tr>
+                <th class="p-1.5 border border-slate-400">Institution Code</th>
+                <th class="p-1.5 border border-slate-400">Approved Course</th>
+                <th class="p-1.5 border border-slate-400">Sanctioned Seats</th>
+                <th class="p-1.5 border border-slate-400">Actual Admitted</th>
+                <th class="p-1.5 border border-slate-400">NRI / Super</th>
+                <th class="p-1.5 border border-slate-400">Compliance</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+        `;
+        STATE.approvedIntake.forEach(i => {
+          const count = STATE.students.filter(s => s.institutionId === i.institutionId && s.course === i.course).length;
+          const isExcess = count > i.approved;
+          html += `
+            <tr>
+              <td class="p-1.5 border border-slate-300 font-mono">1-AICTE-DELHI-001</td>
+              <td class="p-1.5 border border-slate-300 font-bold">${i.course}</td>
+              <td class="p-1.5 border border-slate-300">${i.approved} Seats</td>
+              <td class="p-1.5 border border-slate-300 font-bold text-blue-900">${count} Students</td>
+              <td class="p-1.5 border border-slate-300">${i.nriQuota} NRI / ${i.supernumeraryQuota} Super</td>
+              <td class="p-1.5 border border-slate-300 font-bold ${isExcess ? 'text-red-700 bg-red-50' : 'text-emerald-700 bg-emerald-50'}">${isExcess ? 'EXCESS BREACH' : 'COMPLIANT'}</td>
+            </tr>
+          `;
+        });
+        html += `</tbody></table>`;
+      }
+
+      html += `
+        <div class="pt-4 border-t flex justify-between items-center text-[9px] text-slate-500">
+          <span>Generated via AICTE CYPHER Engine • Digital Audit Ledger Reference</span>
+          <span>Timestamp: ${nowStr}</span>
+        </div>
+      `;
+
+      body.innerHTML = html;
+      addAuditLog('REPORT_VIEW_PDF', 'REPORT', `Generated PDF preview for ${type}`);
+    }
+
+    function closePrintPdfModal() {
+      document.getElementById('modal-pdf-view').classList.add('hidden');
+    }
+
+    function triggerDownload(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      // Set default view to landing page
+      navigateTo('landing');
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+student_name,gender,date_of_birth,apaar_id,father_or_guardian_name,course_name,department,academic_year,roll_number,admission_category,is_nri,is_oci,is_foreign_national,is_supernumerary
+Vikramaditya Roy,MALE,2005-02-14,992144321155,Sunil Roy,B.Tech Computer Science & Engineering,Engineering & Technology,2026-2027,26-CSE-101,GENERAL,FALSE,FALSE,FALSE,FALSE
+Meera Nandakumar,FEMALE,2005-09-08,881923014562,Nandakumar K,B.Tech Computer Science & Engineering,Engineering & Technology,2026-2027,26-CSE-102,OBC_NCL,FALSE,FALSE,FALSE,FALSE
+Siddharth Sen,MALE,2004-12-19,,Arindam Sen,B.Tech Computer Science & Engineering,Engineering & Technology,2026-2027,26-CSE-103,GENERAL,FALSE,FALSE,FALSE,FALSE
+Deepika Sharma,FEMALE,2005-07-25,12345,Mahesh Sharma,B.Tech Electronics & Communication,Engineering & Technology,2026-2027,26-ECE-101,SC,FALSE,FALSE,FALSE,FALSE
+Kavita Rathore,FEMALE,2005-03-11,992144321155,Surendra Rathore,B.Tech Computer Science & Engineering,Engineering & Technology,2026-2027,26-CSE-104,EWS,FALSE,FALSE,FALSE,FALSE
+Aditya Tare,MALE,2005-11-29,910293847561,Santosh Tare,B.Tech Mechanical Engineering,Engineering & Technology,2026-2027,26-ME-101,GENERAL,TRUE,FALSE,FALSE,TRUE
